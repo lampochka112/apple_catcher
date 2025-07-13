@@ -2,7 +2,7 @@ import pygame
 import random
 import sys
 import math
-from pygame import gfxdraw  # Для плавных кругов (антиалиасинг)
+from pygame import gfxdraw 
 
 # Инициализация Pygame
 pygame.init()
