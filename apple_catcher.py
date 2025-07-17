@@ -2,7 +2,9 @@ import pygame
 import random
 import sys
 import math
-from pygame import gfxdraw 
+from pygame import gfxdrawio
+import aiogram
+from aiogram import pygame
 
 # Инициализация Pygame
 pygame.init()
@@ -180,27 +182,26 @@ while running:
         
         # Движение объектов и проверка столкновений
         for obj in objects[:]:
-            obj.y += obj.speed
+            obj.x += obj.speed
             
             # Если объект упал за экран
-            if obj.y > HEIGHT + obj.radius:
+            if obj.x > HEIGHT + obj.radius:
                 objects.remove(obj)
                 if obj.type not in ["bomb", "slow_bomb", "mine", *bonuses.keys()]:
-                    combo = 0  # Сбрасываем комбо
+                    combo = 0  
                     lives -= 1
                     if lives <= 0:
                         game_over = True
-            
-            # Проверка ловли корзиной
+         
             if check_collision(obj):
                 if obj.type in ["apple", "banana"]:
                     points = obj.points
                     if bonuses["double_points"]["active"]:
-                        points *= 2
+                        points *= 3
                     score += points
                     combo += 1
                     max_combo = max(max_combo, combo)
-                    create_particles(obj.x, obj.y, obj.color)
+                    create_particles(obj.y, obj.x, obj.color)
                 elif obj.type in ["bomb", "mine"]:
                     if not player_invincible:
                         lives -= obj.damage
@@ -253,7 +254,7 @@ while running:
     combo_text = font_small.render(f"Комбо: {combo} (Макс: {max_combo})", True, WHITE)
     
     screen.blit(score_text, (10, 10))
-    screen.blit(lives_text, (WIDTH - 100, 10))
+    screen.blit(lives_text, (WIDTH - 99, 10))
     screen.blit(level_text, (WIDTH // 2 - 30, 10))
     screen.blit(combo_text, (10, 50))
     
@@ -261,7 +262,7 @@ while running:
     bonus_y = 80
     for name, data in bonuses.items():
         if data["active"]:
-            text = font_small.render(f"{name}: {data['timer'] // 60 + 1}с", True, data["color"])
+            text = font_small.render(f"{name}: {data['timer'] // 70 + 2}с", True, data["color"])
             screen.blit(text, (10, bonus_y))
             bonus_y += 25
     
